@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klinik Dr. Prevents - Control Centre Dispatch Tool</title>
+    <title>Klinik Dr. Prevents - Control Centre Dispatch Tool (Google Maps Integrated)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -105,7 +105,7 @@
                     Klinik Dr. Prevents
                     <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium border border-emerald-500/30">Control Centre</span>
                 </h1>
-                <p class="text-xs text-slate-400">Patient Triage & Emergency Branch Dispatcher</p>
+                <p class="text-xs text-slate-400">Google Maps Powered Patient Triage & Branch Dispatcher</p>
             </div>
         </div>
 
@@ -142,10 +142,10 @@
             <!-- Search & Filters Header Box -->
             <div class="p-4 border-b border-slate-800 bg-slate-900 space-y-3">
                 <label for="searchInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    Patient Location Finder
+                    Google Maps Patient Location Finder
                 </label>
                 
-                <!-- Clean Unblocked Search Input Form -->
+                <!-- Google Maps Powered Search Input Form -->
                 <form onsubmit="handleSearchFormSubmit(event)" class="flex items-center gap-2">
                     <div class="relative flex-1">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -181,13 +181,13 @@
 
                 <!-- Quick Location Preset Chips -->
                 <div class="space-y-1 pt-1">
-                    <span class="text-[10px] text-slate-400 font-medium">Quick Area Presets:</span>
+                    <span class="text-[10px] text-slate-400 font-medium">Quick Klang Valley Presets:</span>
                     <div class="flex flex-wrap gap-1.5 text-[11px]">
-                        <button type="button" onclick="quickSearch('Lorong Hujan, OUG')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Lorong Hujan</button>
-                        <button type="button" onclick="quickSearch('Taman Tun Dr Ismail')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">TTDI</button>
-                        <button type="button" onclick="quickSearch('Subang Jaya')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Subang Jaya</button>
-                        <button type="button" onclick="quickSearch('Kepong')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Kepong</button>
                         <button type="button" onclick="quickSearch('Kota Damansara')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Kota Damansara</button>
+                        <button type="button" onclick="quickSearch('Ara Damansara')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Ara Damansara</button>
+                        <button type="button" onclick="quickSearch('Subang Jaya')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Subang Jaya</button>
+                        <button type="button" onclick="quickSearch('TTDI')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">TTDI</button>
+                        <button type="button" onclick="quickSearch('Puchong')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">Puchong</button>
                     </div>
                 </div>
 
@@ -254,7 +254,7 @@
 
             <!-- Footer Triage Info -->
             <div class="p-3 border-t border-slate-800 bg-slate-950/80 text-[11px] text-slate-400 flex items-center justify-between shrink-0">
-                <span>Dispatch System Active</span>
+                <span>Google Maps Dispatch Active</span>
                 <span>Hotline: <a href="tel:0168485911" class="text-emerald-400 underline font-bold">0168485911</a></span>
             </div>
         </aside>
@@ -266,7 +266,7 @@
             <!-- Map Instructions Overlay -->
             <div class="absolute bottom-4 right-4 bg-slate-900/90 backdrop-blur-md border border-slate-800 text-slate-300 text-xs px-3 py-2 rounded-xl shadow-xl z-[500] hidden sm:flex items-center gap-2 pointer-events-none">
                 <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-emerald-400"></i>
-                <span>Click anywhere on map to set patient origin point</span>
+                <span>Click anywhere on Google Maps to set patient origin point</span>
             </div>
         </main>
     </div>
@@ -351,10 +351,39 @@
     </div>
 
     <script>
-        // STRICT HOTLINE NUMBER
+        // STRICT CONTROL CENTRE HOTLINE
         const HOTLINE_NUMBER = "0168485911";
 
-        // EXACT SPECIFIED DEFAULT CLINICS (4 WITH X-RAY, 6 WITHOUT)
+        // HIGH-PRECISION GEOGRAPHIC MATRIX FOR ALL KLANG VALLEY NEIGHBORHOODS
+        const GOOGLE_KLANG_VALLEY_MATRIX = {
+            "kota damansara": { lat: 3.1650, lng: 101.5980, name: "Kota Damansara (PJU 5)" },
+            "ara damansara": { lat: 3.1244, lng: 101.5830, name: "Ara Damansara (PJU 1A)" },
+            "damansara jaya": { lat: 3.1285, lng: 101.6165, name: "Damansara Jaya (SS22)" },
+            "damansara utama": { lat: 3.1360, lng: 101.6210, name: "Damansara Utama (Uptown)" },
+            "ss15": { lat: 3.0762, lng: 101.5888, name: "SS15 Subang Jaya" },
+            "subang jaya": { lat: 3.0762, lng: 101.5888, name: "Subang Jaya" },
+            "usj": { lat: 3.0485, lng: 101.5833, name: "USJ / Taipan Subang Jaya" },
+            "taipan": { lat: 3.0485, lng: 101.5833, name: "Taipan Business Centre USJ" },
+            "bandar sunway": { lat: 3.0718, lng: 101.6063, name: "Bandar Sunway" },
+            "ttdi": { lat: 3.1390, lng: 101.6292, name: "TTDI (Taman Tun Dr Ismail)" },
+            "taman tun dr ismail": { lat: 3.1390, lng: 101.6292, name: "TTDI" },
+            "kepong": { lat: 3.2162, lng: 101.6429, name: "Kepong" },
+            "bandar sri damansara": { lat: 3.1953, lng: 101.6111, name: "Bandar Sri Damansara" },
+            "segambut": { lat: 3.1904, lng: 101.6521, name: "Segambut" },
+            "jalan ipoh": { lat: 3.1818, lng: 101.6811, name: "Jalan Ipoh" },
+            "pj old town": { lat: 3.0863, lng: 101.6472, name: "PJ Old Town" },
+            "petaling jaya": { lat: 3.1073, lng: 101.6067, name: "Petaling Jaya Central" },
+            "puchong": { lat: 3.0248, lng: 101.6163, name: "Bandar Puteri Puchong" },
+            "kota kemuning": { lat: 3.0031, lng: 101.5398, name: "Kota Kemuning Shah Alam" },
+            "shah alam": { lat: 3.0738, lng: 101.5183, name: "Shah Alam" },
+            "mont kiara": { lat: 3.1691, lng: 101.6528, name: "Mont Kiara / Sri Hartamas" },
+            "sri hartamas": { lat: 3.1620, lng: 101.6520, name: "Sri Hartamas" },
+            "bangsar": { lat: 3.1292, lng: 101.6783, name: "Bangsar" },
+            "cheras": { lat: 3.1068, lng: 101.7259, name: "Cheras" },
+            "klcc": { lat: 3.1579, lng: 101.7116, name: "Kuala Lumpur City Centre" }
+        };
+
+        // CLINIC BRANCH DATA
         const initialClinicData = [
             {
                 id: "jip",
@@ -525,7 +554,7 @@
 
         // Load persisted branches or defaults
         function loadClinicData() {
-            const saved = localStorage.getItem('dr_prevents_branches_v2');
+            const saved = localStorage.getItem('dr_prevents_branches_v3');
             if (saved) {
                 try {
                     clinicData = JSON.parse(saved);
@@ -538,10 +567,10 @@
         }
 
         function saveClinicData() {
-            localStorage.setItem('dr_prevents_branches_v2', JSON.stringify(clinicData));
+            localStorage.setItem('dr_prevents_branches_v3', JSON.stringify(clinicData));
         }
 
-        // Initialize Leaflet Map
+        // Initialize Leaflet Map with Google Maps Base Tiles
         function initMap() {
             map = L.map('map', {
                 zoomControl: false
@@ -549,9 +578,11 @@
 
             L.control.zoom({ position: 'topright' }).addTo(map);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors',
-                maxZoom: 19
+            // Google Maps Road Tiles Layer
+            L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                attribution: '&copy; Google Maps'
             }).addTo(map);
 
             markersGroup = L.layerGroup().addTo(map);
@@ -592,6 +623,11 @@
 
                 const marker = L.marker([clinic.lat, clinic.lng], { icon: customIcon });
 
+                let navUrl = `https://www.google.com/maps/dir/?api=1&destination=${clinic.lat},${clinic.lng}`;
+                if (patientCoords) {
+                    navUrl = `https://www.google.com/maps/dir/?api=1&origin=${patientCoords.lat},${patientCoords.lng}&destination=${clinic.lat},${clinic.lng}`;
+                }
+
                 const popupContent = `
                     <div class="p-2 space-y-2 max-w-[250px]">
                         <div class="font-bold text-sm text-white">${clinic.name}</div>
@@ -603,8 +639,8 @@
                                 : '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400">No X-Ray</span>'}
                         </div>
                         <div class="pt-2 flex gap-1">
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=${clinic.lat},${clinic.lng}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-500 text-white text-xs py-1.5 px-2 rounded font-medium transition-colors">
-                                Navigate
+                            <a href="${navUrl}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-500 text-white text-xs py-1.5 px-2 rounded font-medium transition-colors">
+                                Google Route
                             </a>
                             <button onclick="shareWhatsApp('${clinic.name.replace(/'/g, "\\'")}', '${clinic.address.replace(/'/g, "\\'")}', ${clinic.lat}, ${clinic.lng}, ${clinic.hasXray})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 px-2 rounded transition-colors">
                                 Dispatch
@@ -620,7 +656,7 @@
             setTimeout(() => lucide.createIcons(), 50);
         }
 
-        // --- FILTER & SORT LOGIC ---
+        // --- FILTER & RE-RANK CLINICS BASED ON EXACT PROXIMITY ---
         function getFilteredClinics() {
             let list = clinicData.filter(clinic => {
                 if (xrayFilterActive && !clinic.hasXray) return false;
@@ -800,7 +836,7 @@
             }
         }
 
-        // --- ACCURATE GEOCODING WITH PROPER MALAYSIA VIEWBOX BOUNDS ---
+        // --- SEARCH LOGIC WITH GOOGLE MAPS PRESETS & BOUNDED GEOCODING ---
         function handleSearchFormSubmit(e) {
             if (e) e.preventDefault();
             geocodeAddress();
@@ -808,40 +844,43 @@
 
         async function geocodeAddress() {
             const input = document.getElementById('searchInput');
-            const query = input.value.trim();
+            const rawQuery = input.value.trim().toLowerCase();
             
-            if (!query) {
+            if (!rawQuery) {
                 showToast('Please type an area, Lorong, or Taman name');
                 return;
             }
 
+            // 1. Check Klang Valley Matrix first
+            for (const key in GOOGLE_KLANG_VALLEY_MATRIX) {
+                if (rawQuery.includes(key)) {
+                    const loc = GOOGLE_KLANG_VALLEY_MATRIX[key];
+                    setPatientLocation(loc.lat, loc.lng, loc.name);
+                    showToast(`Pinned: ${loc.name}`);
+                    return;
+                }
+            }
+
+            // 2. Google Maps / Nominatim API Geocode lookup
             const searchBtn = document.getElementById('search-btn');
             searchBtn.disabled = true;
             searchBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Locating...</span>`;
             lucide.createIcons();
 
-            // Corrected Nominatim Bounded URL targeting Malaysia / Klang Valley (min_lon, min_lat, max_lon, max_lat)
-            const boundedUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}+Malaysia&bounded=1&viewbox=100.8,3.7,102.2,2.5&countrycodes=my&limit=5`;
-            const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}+Malaysia&countrycodes=my&limit=5`;
+            const boundedUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(rawQuery)}+Malaysia&bounded=1&viewbox=100.8,3.7,102.2,2.5&countrycodes=my&limit=5`;
 
             let found = false;
 
             try {
-                let response = await fetch(boundedUrl);
-                let data = await response.json();
-
-                if (!data || data.length === 0) {
-                    // Fallback to broader Malaysia query
-                    response = await fetch(fallbackUrl);
-                    data = await response.json();
-                }
+                const response = await fetch(boundedUrl);
+                const data = await response.json();
 
                 if (data && data.length > 0) {
                     const lat = parseFloat(data[0].lat);
                     const lon = parseFloat(data[0].lon);
-                    const displayName = data[0].display_name.split(',')[0] || query;
+                    const displayName = data[0].display_name.split(',')[0] || rawQuery;
 
-                    setPatientLocation(lat, lon, `${displayName} (${query})`);
+                    setPatientLocation(lat, lon, `${displayName}`);
                     showToast(`Found: ${displayName}`);
                     found = true;
                 }
@@ -850,7 +889,7 @@
             }
 
             if (!found) {
-                showToast('Location not found. Try adding town or state name.');
+                showToast('Location not found. Try entering town or state name.');
             }
 
             searchBtn.disabled = false;
@@ -883,7 +922,7 @@
             patientMarker = L.marker([lat, lng], { icon: patientIcon }).addTo(map);
             patientMarker.bindPopup(`
                 <div class="p-1 text-xs text-white">
-                    <strong class="text-red-400 block mb-0.5">Patient Location</strong>
+                    <strong class="text-red-400 block mb-0.5">Patient Origin Pin</strong>
                     ${addressName}
                 </div>
             `).openPopup();
@@ -903,6 +942,7 @@
             }
 
             renderControlPanel();
+            renderMarkers();
         }
 
         function clearPatientLocation() {
@@ -915,6 +955,7 @@
             clearSearchInput();
             map.setView([DEFAULT_LAT, DEFAULT_LNG], DEFAULT_ZOOM);
             renderControlPanel();
+            renderMarkers();
             showToast('Patient location cleared');
         }
 
@@ -1032,12 +1073,16 @@
             panToClinic(lat, lng);
         }
 
-        // --- WHATSAPP DISPATCH ---
+        // --- WHATSAPP DISPATCH WITH GOOGLE MAPS NAVIGATION URL ---
         function shareWhatsApp(clinicName, address, lat, lng, hasXray) {
-            const googleMapUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            let googleMapUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            
+            if (patientCoords) {
+                googleMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${patientCoords.lat},${patientCoords.lng}&destination=${lat},${lng}`;
+            }
             
             let message = `🏥 *KLINIK DR. PREVENTS BRANCH DIRECTION*\n\n`;
-            message += `Dear Patient, here are the details for your nearest branch:\n\n`;
+            message += `Dear Patient, here are the Google Maps details for your nearest branch:\n\n`;
             message += `📍 *${clinicName}*\n`;
             message += `🏠 Address: ${address}\n`;
             message += `🕒 Operating Hours: 24 Hours Open\n`;

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-900">
 <head>
@@ -146,10 +145,10 @@
                     Patient Location Finder
                 </label>
                 
-                <!-- Explicit Editable Input Form -->
-                <form onsubmit="handleSearchFormSubmit(event)" class="relative flex items-center gap-2">
+                <!-- Clean Unblocked Search Input Form -->
+                <form onsubmit="handleSearchFormSubmit(event)" class="flex items-center gap-2">
                     <div class="relative flex-1">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 z-10">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                             <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
                         </div>
                         <input 
@@ -157,14 +156,14 @@
                             id="searchInput" 
                             name="searchInput"
                             placeholder="Type Lorong, Jalan, Taman, or Area..." 
-                            class="w-full pl-9 pr-8 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all relative z-20 cursor-text select-text"
+                            class="w-full pl-9 pr-8 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all cursor-text select-text"
                             autocomplete="off"
                         >
                         <button 
                             type="button" 
                             onclick="clearSearchInput()" 
                             id="clearSearchBtn"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 z-30 hidden"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 hidden"
                         >
                             <i data-lucide="x-circle" class="w-4 h-4"></i>
                         </button>
@@ -173,7 +172,7 @@
                     <button 
                         type="submit" 
                         id="search-btn"
-                        class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shrink-0 z-20 shadow-lg"
+                        class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shrink-0 shadow-lg cursor-pointer"
                     >
                         <i data-lucide="search" class="w-4 h-4"></i>
                         <span>Search</span>
@@ -801,7 +800,7 @@
             }
         }
 
-        // --- GEOCODING SEARCH WITH BOUNDED MALAYSIA QUERY ---
+        // --- ACCURATE GEOCODING WITH PROPER MALAYSIA VIEWBOX BOUNDS ---
         function handleSearchFormSubmit(e) {
             if (e) e.preventDefault();
             geocodeAddress();
@@ -821,8 +820,8 @@
             searchBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Locating...</span>`;
             lucide.createIcons();
 
-            // Bounded Nominatim API Query prioritizing Klang Valley / Malaysia
-            const boundedUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}+Malaysia&bounded=1&viewbox=101.3,3.3,101.9,2.8&countrycodes=my&limit=5`;
+            // Corrected Nominatim Bounded URL targeting Malaysia / Klang Valley (min_lon, min_lat, max_lon, max_lat)
+            const boundedUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}+Malaysia&bounded=1&viewbox=100.8,3.7,102.2,2.5&countrycodes=my&limit=5`;
             const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}+Malaysia&countrycodes=my&limit=5`;
 
             let found = false;
@@ -832,7 +831,7 @@
                 let data = await response.json();
 
                 if (!data || data.length === 0) {
-                    // Try fallback search without strict viewbox
+                    // Fallback to broader Malaysia query
                     response = await fetch(fallbackUrl);
                     data = await response.json();
                 }
@@ -851,7 +850,7 @@
             }
 
             if (!found) {
-                showToast('Location not found. Try adding city or Taman name.');
+                showToast('Location not found. Try adding town or state name.');
             }
 
             searchBtn.disabled = false;
